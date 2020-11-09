@@ -24,7 +24,8 @@ mergeRatings = pd.merge(pd.merge(users, ratings), movies)
 
 
 def cloneDF(df):
-    return pd.DataFrame(df.values.copy(), df.index.copy(), df.columns.copy()).convert_objects(convert_numeric=True)
+    return pd.to_numeric(pd.Series(df.values.copy(), df.index.copy(), df.columns.copy()), errors ='coerce')
+    #return pd.DataFrame(df.values.copy(), df.index.copy(), df.columns.copy()).convert_objects(convert_numeric=True)
 
 
 # Show Films with more votes. (groupby + sorted)
@@ -59,7 +60,7 @@ print('\n==================================================================\n')
 
 
 # Sort data ratings by created field (groupby + lambda function + sorted)
-sortRatingsField = cloneDF(mergeRatings)
-sortRatingsField = sortRatingsField.groupby(['movie_id', 'title'])['rating'].agg(
+sortRatingsField1 = cloneDF(mergeRatings)
+sortRatingsField1 = sortRatingsField1.groupby(['movie_id', 'title'])['rating'].agg(
     {'COUNT': np.size, 'myAVG': lambda x: x.sum() / float(x.count())}).sort('COUNT', ascending=False)
-print('My info sorted: \n%s' % sortRatingsField[:15])
+print('My info sorted: \n%s' % sortRatingsField1[:15])
