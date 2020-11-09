@@ -24,13 +24,7 @@ mergeRatings = pd.merge(pd.merge(users, ratings), movies)
 
 
 def cloneDF(df):
-<<<<<<< HEAD
-    return pd.to_numeric(pd.Series(df.values.copy(), df.index.copy(), df.columns.copy()), errors ='coerce')
-    #return pd.DataFrame(df.values.copy(), df.index.copy(), df.columns.copy()).convert_objects(convert_numeric=True)
-=======
     return pd.DataFrame(df.values.copy(), df.index.copy(), df.columns.copy()).apply(pd.to_numeric, errors='coerce')#.convert_objects(convert_numeric=True)
->>>>>>> origin/master
-
 
 # Show Films with more votes. (groupby + sorted)
 numberRatings = cloneDF(mergeRatings)
@@ -57,14 +51,26 @@ print('\n==================================================================\n')
 
 # Show data ratings movies, applying a function (groupby + lambda function)
 myAvg = cloneDF(mergeRatings)
-myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg(
-    {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
+myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg([('SUM', np.sum), ('COUNT' , np.size), ('AVG' , np.mean), ('myAVG', lambda x: x.sum() / float(x.count())) ])
+        #       {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
+#<sum = 'sum')
+#myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg(
+#        {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
 print('My info ratings: \n%s' % myAvg[:10])
 print('\n==================================================================\n')
 
 
 # Sort data ratings by created field (groupby + lambda function + sorted)
+<<<<<<< HEAD
 sortRatingsField1 = cloneDF(mergeRatings)
 sortRatingsField1 = sortRatingsField1.groupby(['movie_id', 'title'])['rating'].agg(
     {'COUNT': np.size, 'myAVG': lambda x: x.sum() / float(x.count())}).sort('COUNT', ascending=False)
 print('My info sorted: \n%s' % sortRatingsField1[:15])
+=======
+sortRatingsField = cloneDF(mergeRatings)
+sortRatingsField = sortRatingsField.groupby(['movie_id', 'title'])['rating'].agg(
+        [('COUNT', np.size), ('myAVG', lambda x: x.sum() / float(x.count())) ] ).sort('COUNT', ascending=False)
+#sortRatingsField = sortRatingsField.groupby(['movie_id', 'title'])['rating'].agg(
+#    {'COUNT': np.size, 'myAVG': lambda x: x.sum() / float(x.count())}).sort('COUNT', ascending=False)
+print('My info sorted: \n%s' % sortRatingsField[:15])
+>>>>>>> 049c97e3a3a43b4cb731e30aa988b2cca7ad4036
