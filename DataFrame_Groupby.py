@@ -26,8 +26,6 @@ mergeRatings = pd.merge(pd.merge(users, ratings), movies)
 def cloneDF(df):
     return pd.DataFrame(df.values.copy(), df.index.copy(), df.columns.copy()).apply(pd.to_numeric, errors='coerce')#.convert_objects(convert_numeric=True)
 
-
-
 # Show Films with more votes. (groupby + sorted)
 numberRatings = cloneDF(mergeRatings)
 numberRatings = numberRatings.groupby(
@@ -53,14 +51,17 @@ print('\n==================================================================\n')
 
 # Show data ratings movies, applying a function (groupby + lambda function)
 myAvg = cloneDF(mergeRatings)
-myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg(
-    {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
+myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg([('SUM', np.sum), ('COUNT' , np.size), ('AVG' , np.mean), ('myAVG', lambda x: x.sum() / float(x.count())) ])
+        #       {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
+#<sum = 'sum')
+#myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg(
+#        {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
 print('My info ratings: \n%s' % myAvg[:10])
 print('\n==================================================================\n')
 
 
 # Sort data ratings by created field (groupby + lambda function + sorted)
-LeCodeMarchePas = cloneDF(mergeRatings)
-LeCodeMarchePas = LeCodeMarchePas.groupby(['movie_id', 'title'])['rating'].agg(
+sortRatingsField1 = cloneDF(mergeRatings)
+sortRatingsField1 = sortRatingsField1.groupby(['movie_id', 'title'])['rating'].agg(
     {'COUNT': np.size, 'myAVG': lambda x: x.sum() / float(x.count())}).sort('COUNT', ascending=False)
-print('My info sorted: \n%s' % LeCodeMarchePas[:15])
+print('My info sorted: \n%s' % sortRatingsField1[:15])
